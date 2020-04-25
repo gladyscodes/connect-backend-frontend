@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+//indicar al backend desde donde puede admitir peticiones
+const cors = require("cors");
 
 //Connect mongoose
 const mongoose = require("mongoose");
@@ -16,6 +18,12 @@ console.log(`Connected to mongo! database name: "${x.connections[0].name}"`)
 .catch((err) => console.log("error connecting ", err));
 
 const app = express();
+
+app.use(
+  cors({
+   origin: ["http://localhost:3001"],
+}))
+
 
 app.use(logger('dev'));
 app.use(express.json());

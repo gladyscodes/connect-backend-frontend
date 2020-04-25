@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { createProducts } from '../../services/productsService';
+// import Products from "../Products";
 
 class ProductForm extends Component {
   state = {
@@ -6,15 +8,26 @@ class ProductForm extends Component {
   };
 
   handleChange = (e) => {
-    console.log(e.target.value)
+   let { product } = this.state;
+   product ={ ...product, [e.target.name]: e.target.value};
+   this.setState({ product});
   };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { product } = this.state;
+    createProducts(product).then((res) => {
+      console.log(product);
+    })
+    .catch((res) => console.error(res.response));
+  }
 
   render() {
     return (
       <section className="uk-section">
         <div className="uk-container uk-flex uk-flex-center">
           <div className="uk-width-1-2">
-            <form className="uk-width-1-1">
+            <form className="uk-width-1-1" onSubmit={this.handleSubmit}>
               <div className="uk-margin">
                 <label className="uk-form-label" htmlFor="name">
                   Name:
