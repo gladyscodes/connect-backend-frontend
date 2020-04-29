@@ -11,34 +11,38 @@ class AuthForm extends Component {
 
   handleShowPassword = () => {
     const { showPassword } = this.state;
-    showValue = !showPassword;
-    this.setState({showPassword})
+    const showValue = !showPassword;
+    this.setState({ showPassword: showValue });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    console.log("submit")
     const { user } = this.state;
     const isLogin  = this.props.location.pathname === "/login";
     const action = isLogin ? login : signup;
     action(user).then((res) => {
-    console.log(res);
+    const { user } = res.data;
+    localStorage.setItem("user", JSON.stringify(user));
    });
   };
 
   handleChange = (e) => {
     let { user } = this.state;
-    user ={ ...user, [e.target.name]: e.target.value};
+    user = { ...user, [e.target.name]: e.target.value};
     this.setState({ user });
    };
 
   render() {
-    const showPassword = this.state
+    const { showPassword }  = this.state
     const isLogin  = this.props.location.pathname === "/login";
     return (
       <section className="uk-section">
         <div className="uk-container uk-flex uk-flex-center">
           <div className="uk-width-1-4">
-            <form onSubmit= {this.handleSubmit} 
+           <h3>{ isLogin ? "Login" : "Signup"} </h3>
+            <form 
+              onSubmit= {this.handleSubmit} 
               className="uk-width-1-1 uk-form-stacked uk-flex uk-flex-center uk-flex-column">
               <div className="uk-margin">
                 <label className="uk-form-label" htmlFor="email">
@@ -67,7 +71,7 @@ class AuthForm extends Component {
                       uk-icon="icon: lock"
                     ></span>
                     <input 
-                    onChange= {this.handleChange}
+                    onChange= { this.handleChange }
                     id="password"
                     name="password"
                     className="uk-input" 
@@ -76,21 +80,22 @@ class AuthForm extends Component {
                     />
                     <button
                       className="uk-button"
-                      onClick= {this.handleShowPassword}> Show Password
+                      onClick= { this.handleShowPassword }> Show Password
                     </button>
                   </div>
                 </div>
               </div>
               {isLogin ? (
               <div className="uk-text-meta"> 
-              Aún no tienes cuenta? {""}
+              Don't have an account? {" "}
               <Link className="uk-text-primary" to="/signup">
-               Create account
+               Sign up here.
               </Link>
             </div> 
               ) : null
               }
-              <button className="uk-button uk-button-primary"> {isLogin ? "Login" : "Signup"}</button>
+              <button className="uk-button uk-button-primary">
+               {isLogin ? "Login" : "Signup" } </button>
             </form>
           </div>
         </div>

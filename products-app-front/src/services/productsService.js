@@ -6,6 +6,7 @@ export const getProducts = () => {
 
 export const createProducts = (product) => {
   return axios.post("http://localhost:3000/products", product, {
+    withCredentials: true,
     headers: {
       "Content-Type": "application/json"
     },
