@@ -11,6 +11,12 @@ class AuthForm extends Component {
     showPassword: false,
   };
 
+  componentWillMount() {
+    const { _id } = this.context.state.user;
+    const { history } = this.props;
+    if(_id) return history.push("/login");
+  } 
+
   handleShowPassword = () => {
     const { showPassword } = this.state;
     const showValue = !showPassword;

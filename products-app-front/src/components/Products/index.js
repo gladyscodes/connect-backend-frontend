@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import Card from "../Card";
 import { getProducts } from "../../services/productsService";
+import AppContext from "../../AppContext";
 
 class Products extends Component  {
 state = {
   products: [],
  };
+
+ componentWillMount() {
+   const { _id } = this.context.state.user;
+   const { history } = this.props;
+   if(!_id) return history.push("/login");
+ }
 
  componentDidMount() {
     getProducts().then((res) => {
@@ -34,6 +41,8 @@ render() {
   );
  }
 }
+
+Products.contextType = AppContext;
 
 export default Products;
 

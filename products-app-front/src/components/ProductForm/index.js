@@ -1,11 +1,20 @@
 import React, { Component } from "react";
 import { createProducts } from '../../services/productsService';
+import AppContext from "../../AppContext";
 // import Products from "../Products";
 
 class ProductForm extends Component {
   state = {
     product: {}
   };
+
+  // Block access when logged out
+  componentWillMount() {
+    const { _id } = this.context.state.user;
+    const { history } = this.props;
+    if(!_id) return history.push("/login");
+  }
+ 
 
   handleChange = (e) => {
    let { product } = this.state;
@@ -98,5 +107,7 @@ class ProductForm extends Component {
     );
   }
 }
+
+ProductForm.contextType = AppContext; 
 
 export default ProductForm;
