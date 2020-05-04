@@ -11,3 +11,17 @@ exports.verifyToken = (req, res, next) => {
     });
   });
 };
+
+// checar si el usario tiene el role necesario para acceder a la ruta
+exports.checkRole = (roles) => {
+   return (req, res, next) => {
+     const { role } = req.user;
+      if(roles.includes(role)) {
+        return next();
+      } else {
+        return res
+          .status(403)
+          .json( { msg: "You are not allowed to perform this action " })
+      }
+   }
+}

@@ -10,9 +10,11 @@ class ProductForm extends Component {
 
   // Block access when logged out
   componentWillMount() {
-    const { _id } = this.context.state.user;
+    const { _id, role } = this.context.state.user;
     const { history } = this.props;
+    const hasPermission = ["ADMIN"].includes(role);
     if(!_id) return history.push("/login");
+    if(!hasPermission) return history.push("/")
   }
  
 

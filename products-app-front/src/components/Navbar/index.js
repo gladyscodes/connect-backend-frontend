@@ -7,6 +7,7 @@ const Navbar = () => (
     {(value) => {
       console.log(value)
       const {user} = value.state;
+      const isAdmin = user.role === "ADMIN";
       return (
         <header>
            <nav className="uk-navbar-container" uk-navbar="true">
@@ -15,9 +16,11 @@ const Navbar = () => (
                  <li className="uk-active">
                    <Link to= "/">Home</Link>
                  </li>
-                 <li>
+               {isAdmin ? (
+                <li>
                    <Link to="/new">New Product</Link>
                 </li>
+               ) : null }
               </ul>
             </div>
             <div className="uk-navbar-right">

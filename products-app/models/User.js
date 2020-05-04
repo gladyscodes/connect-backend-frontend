@@ -10,13 +10,18 @@ const userSchema = new Schema ({
        validator: async (email) => {
         const items = await mongoose.models["User"].count({ email });
         return items < 1;
-      },
+     },
     },
    },
    password: {
      type: String,
      required: [true, "You need to add a password"]
    }, 
+   role: {
+     type: String,
+     default: "USER",
+     enum: ["ADMIN", "USER"],
+   }
   },
   { timestamps: true }
 );

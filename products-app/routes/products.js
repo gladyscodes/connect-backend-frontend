@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product")
-const { verifyToken } = require("../utils/auth")
+const { verifyToken, checkRole } = require("../utils/auth")
 
-router.get("/",verifyToken,(req, res) => {
+router.get("/",verifyToken, checkRole(["ADMIN", "USER"]), (req, res) => {
  Product.find()
  .populate("seller", "email")
  .then((products) => {
@@ -12,7 +12,7 @@ router.get("/",verifyToken,(req, res) => {
  .catch((err) => res.status(400).json(err));
 });
 
-router.post("/", verifyToken, (req, res) => {
+router.post("/", verifyToken, checkRole(["ADMIN"]), (req, res) => {
   const {_id} = req.user;
   Product.create({ ...req.body, seller: _id })
   .then((product) => {
