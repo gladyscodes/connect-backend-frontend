@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { login, signup } from "../../services/authService";
 import { Link } from "react-router-dom";
 import AppContext from "../../AppContext";
+import UIkit from "uikit";
 
 class AuthForm extends Component {
 
@@ -18,15 +19,25 @@ class AuthForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit")
     const { user } = this.state;
     const { setUser } = this.context;
+    const { history } = this.props;
     const isLogin  = this.props.location.pathname === "/login";
     const action = isLogin ? login : signup;
-    action(user).then((res) => {
-    const { user } = res.data;
-    localStorage.setItem("user", JSON.stringify(user));
-    setUser(user);
+    const nextRoute = isLogin ? "/" : "/login";
+    action(user)
+     .then((res) => {
+     const { user } = res.data;
+     localStorage.setItem("user", JSON.stringify(user));
+     setUser(user);
+     history.push(nextRoute);
+   })
+    .catch((err) =>  {
+        UIkit.notification({
+          message: `<span uk-icon='icon: close'></span> ${err.response.data.msg}`,
+          status: "danger",
+          pos: "top-right",
+      });
    });
   };
 

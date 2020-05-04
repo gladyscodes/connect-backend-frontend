@@ -17,22 +17,27 @@ router.post("/signup", (req, res) => {
 
 router.post("/login", (req,res) => {
   const { email, password } = req.body;
-  User.findOne({ email }).then((user) => {
+  User.findOne({ email })
+    .then((user) => {
       if (user === null) 
-      return res.status(404).json({ msg: "Incorrect email"})
+       return res.status(404).json({ msg: "Incorrect email" });
 
-     bcrypt.compare(password, user.password).then((match)  => {
+     bcrypt.compare(password, user.password).then((match) => {
        if (match) {
-         const withoutPassword = user.toObject()
+         const withoutPassword = user.toObject();
          delete withoutPassword.password;
-          const token = jwt.sign({ id: user._id }, process.env.SECRET);
+         const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+            expiresIn: "1d",
+          });
           res
-          .cookie("token", token, {
-            expires: new Date(Date.now() + 86400000),
-            secure: false,
-            httpOnly: true, 
+           .cookie("token", token, {
+             expires: new Date(Date.now() + 86400000),
+             secure: false,
+             httpOnly: true, 
           })
           .json({ user: withoutPassword });
+       } else {
+        return res.status(401).json({ msg: "Invalid password" });
        }
      });
   })
