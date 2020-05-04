@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import Routes from "./Routes";
-import AppContext from "./AppContext";
+import AppContext from './AppContext';
+// import Cookies from 'js-cookie';
+import  { withRouter } from "react-router";
+import { logout } from "./services/authService"
 
 class App extends Component {
    state = {
@@ -13,10 +16,19 @@ class App extends Component {
      this.setState( { user });
    }
 
+   logout = () => {
+     const { history } = this.props;
+     logout().then(() => {
+      localStorage.removeItem("user");
+      this.setState( { user: {} });
+      history.push("/login");
+     });
+   };
+
   render() {
-   const { state, setUser } = this;
+   const { state, setUser, logout } = this;
    return (
-    <AppContext.Provider value={{ state, setUser }}>
+    <AppContext.Provider value={{ state, setUser, logout }}>
       <div className="App">
         <Navbar/>
         <Routes/>
@@ -26,4 +38,6 @@ class App extends Component {
  }
 }
 
-export default App;
+const AppWithRouter = withRouter(App);
+
+export default AppWithRouter;
